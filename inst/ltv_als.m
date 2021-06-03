@@ -79,7 +79,8 @@ LHS_R = 0;
 
 for i = 1:bgn - 1
 
-    ee = eye(bgn-1)(:, i);
+    ee = eye(bgn-1);
+    ee = ee(:, i);
 
     LHS_Q = LHS_Q + kron(Gam11*kron(ee, eye(g)), Gam1*kron(ee, eye(g)));
     LHS_R = LHS_R + kron(Gam22*kron(ee, eye(p)), Gam2*kron(ee, eye(p)));
