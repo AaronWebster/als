@@ -36,6 +36,26 @@ Q1pd_calc = 0;
 R1_calc = 0;
 R1pd_calc = 0;
 
+% Necessary Functions
+
+% Process model (CSTR example)
+function xdot = cstr_model(x, ~)
+k = [0.5, 0.5, 0.2, 0.01]'; % nominal value of reaction rate constants
+cf = [0.5, 0.05, 0]';
+Qf = 1;
+Q0 = 1;
+Vr = 100;
+xdot = [Qf / Vr * cf(1) - Q0 / Vr * x(1) - (k(1) * x(1) - (k(2) + x(4)) * x(2) * x(3)); ...
+    Qf / Vr * cf(2) - Q0 / Vr * x(2) + (k(1) * x(1) - (k(2) + x(4)) * x(2) * x(3)) - 2 * (k(3) * x(2)^2 - k(4) * x(3)); ...
+    Qf / Vr * cf(3) - Q0 / Vr * x(3) + (k(1) * x(1) - (k(2) + x(4)) * x(2) * x(3)) + (k(3) * x(2)^2 - k(4) * x(3)); ...
+    0];
+end
+
+% Function used for sensitivity calculations
+function xdot = cstr_sens(x, t, ~)
+xdot = cstr_model(x, t);
+end
+
 for s = 1:ns
 
     % Start ALS Estimation
@@ -158,22 +178,4 @@ R1pd = R1pd_calc / ns;
 
 save Covariances_case1.dat Q1 R1
 
-% Necessary Functions
 
-% Process model (CSTR example)
-function xdot = cstr_model(x, ~)
-k = [0.5, 0.5, 0.2, 0.01]'; % nominal value of reaction rate constants
-cf = [0.5, 0.05, 0]';
-Qf = 1;
-Q0 = 1;
-Vr = 100;
-xdot = [Qf / Vr * cf(1) - Q0 / Vr * x(1) - (k(1) * x(1) - (k(2) + x(4)) * x(2) * x(3)); ...
-    Qf / Vr * cf(2) - Q0 / Vr * x(2) + (k(1) * x(1) - (k(2) + x(4)) * x(2) * x(3)) - 2 * (k(3) * x(2)^2 - k(4) * x(3)); ...
-    Qf / Vr * cf(3) - Q0 / Vr * x(3) + (k(1) * x(1) - (k(2) + x(4)) * x(2) * x(3)) + (k(3) * x(2)^2 - k(4) * x(3)); ...
-    0];
-end
-
-% Function used for sensitivity calculations
-function xdot = cstr_sens(x, t, ~)
-xdot = cstr_model(x, t);
-end
