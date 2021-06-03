@@ -1,8 +1,9 @@
-Autocovariance Least-Squares (ALS) Package
+# Autocovariance Least-Squares (ALS) Package
  
-Version 4.0, Copyright (C) 2010
+Version 5.0, Copyright (C) 2010
 
 Fernando V. Lima, Murali R. Rajamani, James B. Rawlings and John W. Eaton.
+Modified for modern distributions by Aaron Webster.
 
 ALS is a free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -12,25 +13,22 @@ later version.
 ALS is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the text file
-COPYING for more details.
+LICENSE for more details.
 
-Availability
-------------
+## Availability
 
-The latest released version of ALS is always available via
-anonymous ftp from ftp.octave.org in the directory /pub/als.
+The latest released version of ALS is available via the 
+[Rawlings Group](https://sites.engineering.ucsb.edu/~jbraw/software/als/download/index.html) website.
 
-Installation
-------------
+## Installation
 
 To compile ALS, you will need a recent version of GNU Octave. 
 You will also need the Sundials toolbox (version 2.4) to compile the 
 linear time-varying ALS (LTV-ALS) module. The linear ALS module is 
-also compatible with recent versions of Matlab (tested under version 
+also compatible with recent versions of MATLAB (tested under version 
 7.6, R2008a). 
 
-Bugs
-----
+## Bugs
 
 Questions, comments, bug reports, and contributions should be sent to
 the bug-als@bevo.che.wisc.edu mailing list.
