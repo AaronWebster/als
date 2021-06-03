@@ -31,7 +31,7 @@ Qw_hat = diag([1, 2, 3]);
 %Qw_hat= 5*Q_w;
 Rv_hat = 1e-3 * R_v;
 
-[pa, na] = size(Ca);
+[pa, ~] = size(Ca);
 [na, ga] = size(Ga);
 
 n = na;
@@ -54,12 +54,12 @@ x(:, 1) = 10 * ones(na, 1); % x0
 xhat_(1:na, 1) = x(:, 1); % assume initial state perfectly known
 
 for i = 1:datapts
-
+    
     y(:, i) = Ca * x(:, i) + mult_Rv * randn(pa, 1);
     xhat(:, i) = xhat_(:, i) + L * (y(:, i) - Ca * xhat_(:, i));
     x(:, i+1) = Aa * x(:, i) + Ga * (mult_Qw * randn(ga, 1));
     xhat_(:, i+1) = Aa * xhat(:, i);
-
+    
 end
 
 % SETUP ALS PROBLEM
@@ -80,4 +80,4 @@ estimator.L = L;
 %estimator.Q = Qw_hat;
 %estimator.R = Rv_hat;
 
-[Qest, Rest, Lest, As, bhat] = als_diag(data, N, model, estimator)
+[Qest, Rest, Lest, As, bhat] = als_diag(data, N, model, estimator);

@@ -34,7 +34,7 @@ for i = 1:1:p
 end
 
 npts = size(Yi, 2) - N;
-for i = 1:1:p;
+for i = 1:1:p
     for j = 1:1:p
         cov_bound(i, j) = sqrt(bhat_mtr(1, p * (i - 1) + i)*bhat_mtr(1, p * (j - 1) + j)/(npts));
     end

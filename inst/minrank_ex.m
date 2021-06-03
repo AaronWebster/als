@@ -17,7 +17,7 @@ R_v = 0.1 * eye(m);
 Q_w = 0.1 * eye(n);
 Ga = eye(n);
 
-[pa, na] = size(Ca);
+[pa, ~] = size(Ca);
 [na, ga] = size(Ga);
 
 n = na;
@@ -36,12 +36,12 @@ x(:, 1) = 10 * ones(na, 1); % x0
 xhat_(1:na, 1) = x(:, 1); % assume initial state perfectly known
 
 for i = 1:datapts
-
+    
     y(:, i) = Ca * x(:, i) + sqrt(R_v) * randn(pa, 1);
     xhat(:, i) = xhat_(:, i) + L * (y(:, i) - Ca * xhat_(:, i));
     x(:, i+1) = Aa * x(:, i) + Ga * (sqrt(Q_w) * randn(ga, 1));
     xhat_(:, i+1) = Aa * xhat(:, i);
-
+    
 end
 
 model.A = Aa;
@@ -60,7 +60,7 @@ rho = logspace(-6, 6, 25)';
 [Qest, Rest, trace_Q, phi_Q] = als_sdp_mrQ(data, N, model, estimator, 'rho_values', rho);
 
 % Build Tradeoff plots using calculated data
-for i = 1:length(Qest);
+for i = 1:length(Qest)
     rank_Q(i) = rank(Qest{i}, 1e-4);
 end
 figure(1)

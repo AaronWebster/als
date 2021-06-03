@@ -338,7 +338,7 @@ else
     for i = 1:1:length(lam_vec)
         lam = lam_vec(i);
         time1 = cputime;
-        [QR1, phi, phi_tot, iter, nsq, iter_maxed] = sdp_QR_mrQ(LHSsingc, Eyy, Wm, Q0, lam, numax, pa, Rsym, trstates);
+        [QR1, phi, phi_tot, iter, ~, iter_maxed] = sdp_QR_mrQ(LHSsingc, Eyy, Wm, Q0, lam, numax, pa, Rsym, trstates);
         timespent(i, 1) = cputime - time1;
         Qest = QR1(1:ga, 1:ga);
         Rest = QR1(ga+1:end, ga+1:end);

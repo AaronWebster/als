@@ -127,7 +127,7 @@ As_diag = [LH1(:, 1:ga + 1:ga^2), LH2(:, 1:pa + 1:pa^2)];
 % Testing the uniqueness of covariance estimates
 Arank = rank(As_diag, 1e-4);
 
-[nr, nc] = size(As_diag);
+[~, nc] = size(As_diag);
 
 if nc > Arank
     error('Covariance estimates are not unique!\n');

@@ -3,7 +3,7 @@
 
 function [L, P] = ECM_iter(A, G, C, Q, R)
 
-[p, n] = size(C);
+[~, n] = size(C);
 Pold = zeros(n);
 P = eye(n);
 tol = 1e-12;

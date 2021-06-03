@@ -11,8 +11,10 @@ function A = celldiag(F, n)
 % (augmented with zeros if n specified)
 % A = [0 0; blockdiag(F) 0] if n < 0
 % A = [0 blockdiag(F); 0 0] if n > 0
-if (nargin == 1) n = 0; end
-len = prod(size(F));
+if (nargin == 1) 
+    n = 0; 
+end
+len = numel(F);
 A = F{1};
 [x, y] = size(A);
 for i = 2:len

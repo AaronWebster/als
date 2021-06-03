@@ -22,7 +22,7 @@ function [b_mtr, b] = autocov_calc_thry(A, C, L, Q, R, N)
 Abar = A - A * L * C;
 P = dlyap(Abar, Q+A*L*R*L'*A');
 Eyy = C * P * C' + R;
-for i = 1:1:N - 1;
+for i = 1:1:N - 1
     Eyy = [Eyy; C * Abar^i * P * C' - C * Abar^(i - 1) * A * L * R];
 end
 b = Eyy(:);

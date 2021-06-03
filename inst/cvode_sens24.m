@@ -57,11 +57,11 @@ end
 % Allocate storage for forward sensitivity problem.
 %  CVodeSensMalloc (np, 'Simultaneous', sx0, fsa_options);
 
-[status, t, x_step, sx_step] = CVode(t1, 'Normal');
+[status, ~, x_step, sx_step] = CVode(t1, 'Normal');
 
 if (status == 0)
     x(:, 2) = x_step;
-else (status < 0)
+else (status < 0);
     error('CVode failed with status = %d', status);
 end
 
@@ -74,7 +74,7 @@ CVodeFree();
 
 end %cvode_sens
 
-function [xsd, flag, new_data] = sensrhs(t, x, xdot, xs, dataCV)
+function [xsd, flag, new_data] = sensrhs(t, x, ~, xs, dataCV)
 % Right hand side of forward sensitivity equation
 % sx = dx/dp
 % dsx / dt = df/dx * sx + df/dp
@@ -83,7 +83,7 @@ nx = length(x);
 p = dataCV.theta;
 u = p(nx+1:end);
 
-dfdp = [model.dodedx(x, t, u), model.dodedu(x, t, u)];;
+dfdp = [model.dodedx(x, t, u), model.dodedu(x, t, u)];
 xsd = model.dodedx(x, t, u) * xs + dfdp;
 flag = 0;
 new_data = [];

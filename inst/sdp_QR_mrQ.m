@@ -66,7 +66,7 @@ nu_first = 1;
 while (nu > 1e-12)
     % Decrease penalty on log-barrier term (for sdp constraints)
     if iter > 0
-        if iter / maxiter < 0.75;
+        if iter / maxiter < 0.75
             nu = nu * 0.75;
         else
             nu = nu * (0.95 * iter) / maxiter;
@@ -89,7 +89,7 @@ while (nu > 1e-12)
         alph = golden_section_Q_mrQ(0, alphmax, Q, delQ, Az, b, W, nu, vlam_mtr);
         Qold = Q;
         Qnew = Qold + 0.99 * alph * delQ;
-        if (nu_first < 1 && min(eig(Qnew)) < 0);
+        if (nu_first < 1 && min(eig(Qnew)) < 0)
             % Keep solution from becoming infeasible
             Qnew = Qold;
         end
@@ -112,7 +112,7 @@ while (nu > 1e-12)
     end
     % If solution with highest penalty on log-barrier term is infeasible, increase log-barrier penalty:
     if nu_first == 1
-        [r, p] = chol(Q);
+        [~, p] = chol(Q);
         % If solution is feasible, continue normally
         if p == 0
             nu_first = 0;

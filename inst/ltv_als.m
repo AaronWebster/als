@@ -34,7 +34,7 @@ Eyy = vec(Eyyfl);
 
 % Calculate Gamma
 Apr{1} = eye(n);
-for j = 2:N;
+for j = 2:N
     Apr{j} = Ain{bgn+j-2} * Apr{j-1};
 end
 
@@ -49,7 +49,7 @@ for i = bgn:-1:2
 end
 
 % Calculate Omega1 and Omega2
-for j = 1:bgn - 1;
+for j = 1:bgn - 1
     AL{j} = -Ak{j} * Lk{j};
 end
 
@@ -60,7 +60,7 @@ Omega2 = blkdiag(AL{1:bgn - 1});
 PSI = eye(p);
 Apr1 = eye(n);
 
-for i = 1:N - 1;
+for i = 1:N - 1
     PSI = [PSI; -Ck{bgn + i} * Apr1 * Ak{bgn} * Lk{bgn}];
     Apr1 = Ain{bgn+i} * Apr1;
 end
@@ -78,13 +78,13 @@ LHS_Q = 0;
 LHS_R = 0;
 
 for i = 1:bgn - 1
-
+    
     ee = eye(bgn-1);
     ee = ee(:, i);
-
+    
     LHS_Q = LHS_Q + kron(Gam11*kron(ee, eye(g)), Gam1*kron(ee, eye(g)));
     LHS_R = LHS_R + kron(Gam22*kron(ee, eye(p)), Gam2*kron(ee, eye(p)));
-
+    
 end
 
 LHS_R = LHS_R + kron(eye(p), PSI);
