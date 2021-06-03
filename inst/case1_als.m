@@ -1,12 +1,12 @@
-# LTV-ALS case study from Lima and Rawlings (2010)
-# Case 1: Noise added to reaction rate constant k(2)
+% LTV-ALS case study from Lima and Rawlings (2010)
+% Case 1: Noise added to reaction rate constant k(2)
 
 clear all
 close all
 
-########################
-# Necessary Functions ##
-########################
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Necessary Functions %%
+%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Process model (CSTR example)
 function xdot = cstr_model(x,t)
@@ -26,9 +26,9 @@ function xdot = cstr_sens(x,t,u)
   xdot = cstr_model(x,t);
 endfunction
 
-#######################################
-# Load Data and Define Parameters #####
-#######################################
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load Data and Define Parameters %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 load xdata_case1.mat 
 load ydata_case1.mat 
 
@@ -61,9 +61,9 @@ R1pd_calc = 0;
 
 for(s = 1:ns)
   
-############################
-# Start ALS Estimation #####
-############################
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Start ALS Estimation %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   data.delt = delta_d; % data sampling time
 

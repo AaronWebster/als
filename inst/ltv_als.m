@@ -1,5 +1,5 @@
-# Open source code of linear time-varying autocovariance least-squares (LTV-ALS)
-# technique to estimate covariances for nonlinear and time-varying models
+% Open source code of linear time-varying autocovariance least-squares (LTV-ALS)
+% technique to estimate covariances for nonlinear and time-varying models
 
 % This function is used to build up the stacks for the ALS
 % structure of eq. (17) of Lima & Rawlings (2010). These stacks are used to
