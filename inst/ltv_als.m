@@ -36,64 +36,64 @@ Eyy = vec(Eyyfl);
 Apr{1} = eye(n);
 for j = 2:N;
     Apr{j} = Ain{bgn+j-2} * Apr{j-1};
-    endfor
+end
 
-    Gamma = [];
-    for i = bgn:-1:2
-        tempG = [];
-        for j = 1:N
-            tempG = [tempG; Ck{bgn + j - 1} * Apr{j}];
-            Apr{j} = Apr{j} * Ain{i-1};
-            endfor
-            Gamma = [tempG, Gamma];
-            endfor
+Gamma = [];
+for i = bgn:-1:2
+    tempG = [];
+    for j = 1:N
+        tempG = [tempG; Ck{bgn + j - 1} * Apr{j}];
+        Apr{j} = Apr{j} * Ain{i-1};
+    end
+    Gamma = [tempG, Gamma];
+end
 
-            % Calculate Omega1 and Omega2
-            for j = 1:bgn - 1;
-                AL{j} = -Ak{j} * Lk{j};
-                endfor
+% Calculate Omega1 and Omega2
+for j = 1:bgn - 1;
+    AL{j} = -Ak{j} * Lk{j};
+end
 
-                Omega1 = blkdiag(Gk{1:bgn - 1});
-                Omega2 = blkdiag(AL{1:bgn - 1});
+Omega1 = blkdiag(Gk{1:bgn - 1});
+Omega2 = blkdiag(AL{1:bgn - 1});
 
-                % Calculate PSI
-                PSI = eye(p);
-                Apr1 = eye(n);
+% Calculate PSI
+PSI = eye(p);
+Apr1 = eye(n);
 
-                for i = 1:N - 1;
-                    PSI = [PSI; -Ck{bgn + i} * Apr1 * Ak{bgn} * Lk{bgn}];
-                    Apr1 = Ain{bgn+i} * Apr1;
-                    endfor
+for i = 1:N - 1;
+    PSI = [PSI; -Ck{bgn + i} * Apr1 * Ak{bgn} * Lk{bgn}];
+    Apr1 = Ain{bgn+i} * Apr1;
+end
 
-                    % Gamma x Omega1
-                    Gam1 = Gamma * Omega1;
-                    % Gamma1 x Omega1
-                    Gam11 = Gamma(1:p, :) * Omega1;
-                    % Gamma x Omega2
-                    Gam2 = Gamma * Omega2;
-                    % Gamma1 x Omega2
-                    Gam22 = Gamma(1:p, :) * Omega2;
+% Gamma x Omega1
+Gam1 = Gamma * Omega1;
+% Gamma1 x Omega1
+Gam11 = Gamma(1:p, :) * Omega1;
+% Gamma x Omega2
+Gam2 = Gamma * Omega2;
+% Gamma1 x Omega2
+Gam22 = Gamma(1:p, :) * Omega2;
 
-                    LHS_Q = 0;
-                    LHS_R = 0;
+LHS_Q = 0;
+LHS_R = 0;
 
-                    for i = 1:bgn - 1
+for i = 1:bgn - 1
 
-                        ee = eye(bgn-1)(:, i);
+    ee = eye(bgn-1)(:, i);
 
-                        LHS_Q = LHS_Q + kron(Gam11*kron(ee, eye(g)), Gam1*kron(ee, eye(g)));
-                        LHS_R = LHS_R + kron(Gam22*kron(ee, eye(p)), Gam2*kron(ee, eye(p)));
+    LHS_Q = LHS_Q + kron(Gam11*kron(ee, eye(g)), Gam1*kron(ee, eye(g)));
+    LHS_R = LHS_R + kron(Gam22*kron(ee, eye(p)), Gam2*kron(ee, eye(p)));
 
-                        endfor
+end
 
-                        LHS_R = LHS_R + kron(eye(p), PSI);
+LHS_R = LHS_R + kron(eye(p), PSI);
 
-                        LHS = [LHS_Q * duplication_matrix(g), LHS_R * duplication_matrix(p)];
+LHS = [LHS_Q * duplication_matrix(g), LHS_R * duplication_matrix(p)];
 
-                        X = ols(Eyy, LHS);
+X = ols(Eyy, LHS);
 
-                        Qdet = reshape(duplication_matrix(g)*X(1:g * (g + 1) / 2, 1), g, g);
+Qdet = reshape(duplication_matrix(g)*X(1:g * (g + 1) / 2, 1), g, g);
 
-                        Rdet = reshape(duplication_matrix(p)*X(g * (g + 1) / 2 + 1:end, 1), p, p);
+Rdet = reshape(duplication_matrix(p)*X(g * (g + 1) / 2 + 1:end, 1), p, p);
 
-                        endfunction
+end

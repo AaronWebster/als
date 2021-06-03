@@ -17,12 +17,12 @@ xdot = [Qf / Vr * cf(1) - Q0 / Vr * x(1) - (k(1) * x(1) - (k(2) + x(4)) * x(2) *
     Qf / Vr * cf(2) - Q0 / Vr * x(2) + (k(1) * x(1) - (k(2) + x(4)) * x(2) * x(3)) - 2 * (k(3) * x(2)^2 - k(4) * x(3)); ...
     Qf / Vr * cf(3) - Q0 / Vr * x(3) + (k(1) * x(1) - (k(2) + x(4)) * x(2) * x(3)) + (k(3) * x(2)^2 - k(4) * x(3)); ...
     0];
-endfunction
+end
 
 % Function used for sensitivity calculations
 function xdot = cstr_sens(x, t, u)
 xdot = cstr_model(x, t);
-endfunction
+end
 
 % Load Data and Define Parameters
 load xdata_case1.mat
@@ -115,64 +115,64 @@ for (s = 1:ns)
             % Calculate innovations:
             inn(:, i) = y_d{s}(:, i) - yhat(:, i);
             xhat(:, i) = xhat(:, i) + Lk{i} * inn(:, i);
-            endfor
+        end
 
-            % ALS (Q, R) estimation
-            % Check system properties before ALS calculation
-            is_stable(Ak{datalen}, sqrt(eps), 1);
-            is_observable(Ak{datalen}, Cbar, sqrt(eps));
-            is_detectable(Ak{datalen}, Cbar, sqrt(eps), 1);
-            is_stabilizable(Ak{datalen}, Gbar, sqrt(eps), 1);
+        % ALS (Q, R) estimation
+        % Check system properties before ALS calculation
+        is_stable(Ak{datalen}, sqrt(eps), 1);
+        is_observable(Ak{datalen}, Cbar, sqrt(eps));
+        is_detectable(Ak{datalen}, Cbar, sqrt(eps), 1);
+        is_stabilizable(Ak{datalen}, Gbar, sqrt(eps), 1);
 
-            % Compute LHS and data stacks for ALS calculation in eq. (17) of Lima & Rawlings (2010)
-            LHS_stack = [];
-            dat_stack = [];
+        % Compute LHS and data stacks for ALS calculation in eq. (17) of Lima & Rawlings (2010)
+        LHS_stack = [];
+        dat_stack = [];
 
-            for i = 2:datalen - start - data.N + 1
-                rng = i + start + data.N - 1;
+        for i = 2:datalen - start - data.N + 1
+            rng = i + start + data.N - 1;
 
-                [Qdet, Rdet, LHS, Eyy] = ltv_als(inn(:, i:rng), data.N, start+1, Ain(1, i:rng), Ak(1, i:rng), Ck(1, i:rng), Gk(1, i:rng), Lk(1, i:rng));
+            [Qdet, Rdet, LHS, Eyy] = ltv_als(inn(:, i:rng), data.N, start+1, Ain(1, i:rng), Ak(1, i:rng), Ck(1, i:rng), Gk(1, i:rng), Lk(1, i:rng));
 
-                LHS_stack = [LHS_stack; LHS];
+            LHS_stack = [LHS_stack; LHS];
 
-                dat_stack = [dat_stack; Eyy];
+            dat_stack = [dat_stack; Eyy];
 
-                cond(LHS_stack);
-                var(dat_stack);
+            cond(LHS_stack);
+            var(dat_stack);
 
-                endfor
+        end
 
-                % Check condition number of LHS
-                condn(s) = cond(LHS_stack);
+        % Check condition number of LHS
+        condn(s) = cond(LHS_stack);
 
-                Eyyn(:, s) = dat_stack;
+        Eyyn(:, s) = dat_stack;
 
-                % Initial guess for SDP
-                QR0 = blkdiag(Q_guess, R_guess);
+        % Initial guess for SDP
+        QR0 = blkdiag(Q_guess, R_guess);
 
-                % Call SDP to calculate semipositive definite covariance estimates
-                % The calculated (Q1, R1) are constrained unique estimates using SDP
+        % Call SDP to calculate semipositive definite covariance estimates
+        % The calculated (Q1, R1) are constrained unique estimates using SDP
 
-                %[QR,phi,iter] = sdp_QR(LHS_stack,dat_stack,QR0,1,10,p,1);
-                [QR, phi, ~, iter] = sdp_QR_mrQ(LHS_stack, dat_stack, eye(length(dat_stack)), QR0, 0, 1, p, 1, 1);
-                Q1 = QR(1:g, 1:g);
-                R1 = QR(g+1:end, g+1:end);
+        %[QR,phi,iter] = sdp_QR(LHS_stack,dat_stack,QR0,1,10,p,1);
+        [QR, phi, ~, iter] = sdp_QR_mrQ(LHS_stack, dat_stack, eye(length(dat_stack)), QR0, 0, 1, p, 1, 1);
+        Q1 = QR(1:g, 1:g);
+        R1 = QR(g+1:end, g+1:end);
 
-                Q1pd = (Q1 + Q1') / 2;
-                R1pd = (R1 + R1') / 2;
+        Q1pd = (Q1 + Q1') / 2;
+        R1pd = (R1 + R1') / 2;
 
-                Q1_calc = Q1_calc + Q1;
-                Q1pd_calc = Q1pd_calc + Q1pd;
+        Q1_calc = Q1_calc + Q1;
+        Q1pd_calc = Q1pd_calc + Q1pd;
 
-                R1_calc = R1_calc + R1;
-                R1pd_calc = R1pd_calc + R1pd;
-                endfor
+        R1_calc = R1_calc + R1;
+        R1pd_calc = R1pd_calc + R1pd;
+    end
 
-                % Calculate average of covariance estimates for ns simulations
-                Q1 = Q1_calc / ns
-                Q1pd = Q1pd_calc / ns;
+    % Calculate average of covariance estimates for ns simulations
+    Q1 = Q1_calc / ns
+    Q1pd = Q1pd_calc / ns;
 
-                R1 = R1_calc / ns
-                R1pd = R1pd_calc / ns;
+    R1 = R1_calc / ns
+    R1pd = R1pd_calc / ns;
 
-                save Covariances_case1.dat Q1 R1
+    save Covariances_case1.dat Q1 R1

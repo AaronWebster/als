@@ -42,37 +42,37 @@ for i = 1:datapts
     x(:, i+1) = Aa * x(:, i) + Ga * (sqrt(Q_w) * randn(ga, 1));
     xhat_(:, i+1) = Aa * xhat(:, i);
 
-    endfor
+end
 
-    model.A = Aa;
-    model.C = Ca;
-    model.G = Ga;
-    data.datapts = datapts;
-    data.yk = y;
-    data.xhatk = xhat_(:, 1:end-1);
-    data.start = 100;
+model.A = Aa;
+model.C = Ca;
+model.G = Ga;
+data.datapts = datapts;
+data.yk = y;
+data.xhatk = xhat_(:, 1:end-1);
+data.start = 100;
 
-    N = 15;
+N = 15;
 
-    estimator.Q = Q_w;
-    estimator.R = R_v;
-    rho = logspace(-6, 6, 25)';
-    [Qest, Rest, trace_Q, phi_Q] = als_sdp_mrQ(data, N, model, estimator, 'rho_values', rho);
+estimator.Q = Q_w;
+estimator.R = R_v;
+rho = logspace(-6, 6, 25)';
+[Qest, Rest, trace_Q, phi_Q] = als_sdp_mrQ(data, N, model, estimator, 'rho_values', rho);
 
-    % Build Tradeoff plots using calculated data
-    for i = 1:length(Qest);
-        rank_Q(i) = rank(Qest{i}, 1e-4);
-    end
-    figure(1)
+% Build Tradeoff plots using calculated data
+for i = 1:length(Qest);
+    rank_Q(i) = rank(Qest{i}, 1e-4);
+end
+figure(1)
 
-    plot(phi_Q, trace_Q)
-    xlabel('\phi')
-    ylabel('tr(Q)')
+plot(phi_Q, trace_Q)
+xlabel('\phi')
+ylabel('tr(Q)')
 
-    figure(2)
-    subplot(3, 1, 1)
-    semilogx(rho, phi_Q); ylabel('\phi')
-    subplot(3, 1, 2);
-    semilogx(rho, rank_Q, 'ro'); ylabel('rank(Q)')
-    subplot(3, 1, 3)
-    semilogx(rho, trace_Q, 'k'); ylabel('tr(Q)')
+figure(2)
+subplot(3, 1, 1)
+semilogx(rho, phi_Q); ylabel('\phi')
+subplot(3, 1, 2);
+semilogx(rho, rank_Q, 'ro'); ylabel('rank(Q)')
+subplot(3, 1, 3)
+semilogx(rho, trace_Q, 'k'); ylabel('tr(Q)')
