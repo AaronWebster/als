@@ -61,11 +61,10 @@ diff = cputime;
 
   if (status == 0)
     x(:,2) = x_step;
-  elseif (status < 0)
-    warning ('CVode failed with status = %d', status);
-	     break;
-  end %if (status == 0)
-
+  else (status < 0)
+    error ('CVode failed with status = %d', status);   
+  end
+  
   nlin = x(:,2);
   Sk = [];
   Sk = sx_step;

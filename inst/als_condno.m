@@ -40,9 +40,9 @@ na = n;ga = g;pa = p;
 
 if nargin == 3
 	Rsym = 0;
-elseif strmatch(lower(Rform),'sym')
+elseif strcmpi(Rform,'sym')
 	Rsym = 1;
-elseif strmatch(lower(Rform),'diag')
+elseif strcmpi(Rform,'diag')
 	Rsym = 0;
 else
 	warning('als_sdp_mrQ: Unknown structure type for R; defaulting to diagonal');

@@ -18,7 +18,8 @@
 
 function [Qest,Rest,Lest,As,bhat] = als_diag(data,N,model,estimator)
 
-if( nargin ~= 4) error('als: invalid number of arguments');
+if( nargin ~= 4) 
+    error('als: invalid number of arguments');
 end 
   
 datapts = data.datapts;
@@ -124,8 +125,7 @@ Arank = rank(As_diag, 1e-4);
 [nr, nc] = size(As_diag);
 
 if nc > Arank
-  printf('Warning: Covariance estimates are not unique!\n')
-  pause
+  error('Covariance estimates are not unique!\n');
 end
 
 Xest_diag = qp(ones(ga+pa,1), As_diag'*As_diag, -As_diag'*Eyy, [], [], zeros(ga+pa,1), [], [], eye(pa+ga), []); 
@@ -134,7 +134,7 @@ Xest_diag = qp(ones(ga+pa,1), As_diag'*As_diag, -As_diag'*Eyy, [], [], zeros(ga+
 %Xest_diag = quadprog(As_diag'*As_diag, -As_diag'*Eyy, -eye(pa+ga), zeros(ga+pa,1));
 
 if prod(Xest_diag)==0 
-  printf('Warning: Covariance estimate(s) is (are) at constraints! You may have bad data! \n')
+  error('Covariance estimate(s) is (are) at constraints! You may have bad data! \n')
 end
 
 Qest=diag(Xest_diag(1:ga));

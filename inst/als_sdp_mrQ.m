@@ -80,12 +80,19 @@ end
 [n,g] = size(Ga);
 p = size(Ca,1);
 
-if( isfield(model, 'B')) Ba = model.B; m = size(Ba,2);
-else Ba = zeros(n); m = n; data.uk = zeros(m,datapts);
+if( isfield(model, 'B')) 
+    Ba = model.B; 
+    m = size(Ba,2);
+else
+    Ba = zeros(n); 
+    m = n; 
+    data.uk = zeros(m,datapts);
 end
 
-if( isfield(data, 'start')) start = data.start;
-else start = 100;
+if( isfield(data, 'start')) 
+    start = data.start;
+else
+    start = 100;
 end
 
   
@@ -106,7 +113,7 @@ okargs = {'rho_values','tracestates','rform','weight','plot','sdp'};
 for j=1:2:(nargin-4)
 	pname = varargin{j};
 	pval = varargin{j+1};
-	k = strmatch(lower(pname), okargs);
+	k = strcmpi(pname, okargs);
 	if isempty(k)
 		error('als_sdp_mrQ: Unknown parameter name: %s.', pname);
 	elseif length(k)>1
@@ -118,17 +125,17 @@ for j=1:2:(nargin-4)
 		case 2  % States to be penalized
 			trstates = pval(:);
 		case 3  % Rv symmetric or diagonal
-			if strmatch(lower(pval),'sym')
+			if strcmpi(pval,'sym')
 				Rsym = 1;
-			elseif strmatch(lower(pval),'diag')
+			elseif strcmpi(pval,'diag')
 				Rsym = 0;
 			else
 				warning('als_sdp_mrQ: Unknown structure type for R; defaulting to diagonal');
 			end
 		case 4 % Weighting - data-based or identity?
-			if strmatch(upper(pval),'I')
+			if strcmpi(pval,'I')
 				dataweight = 0;
-			elseif strmatch(lower(pval),'data')
+			elseif strcmpi(pval,'data')
 				dataweight = 1;
 			else
 				warning('als_sdp_mrQ: Unknown weighting type; defaulting to data-based');
