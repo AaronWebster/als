@@ -28,7 +28,7 @@ Ca = model.C;
 Ga = model.G;
 [n,g] = size(Ga);
 p = size(Ca,1);
-if( isfield(model, 'B')) Ba = model.B; m = columns(Ba);
+if( isfield(model, 'B')) Ba = model.B; m = size(Ba,2);
 else Ba = zeros(n);m = n; data.uk = zeros(m,datapts);
 end
 start = data.start;

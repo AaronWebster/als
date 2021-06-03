@@ -26,7 +26,7 @@ function [Qdet, Rdet, LHS, Eyy] = ltv_als(yinn, N, bgn, Ain, Ak, Ck, Gk, Lk)
 
   % Define p, n and g
   [p,n] = size(Ck{1});
-  g = columns(Gk{1});
+  g = size(Gk{1},2);
 
   % Build data vector ([Rkhat(N)]_s):
   Eyyfl = vec(yinn)*yinn(:,1)';

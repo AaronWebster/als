@@ -44,14 +44,14 @@ delta_d = 0.25; % simulation sampling time
 t_d = 0:delta_d:tsim;
 nt_d = length(t_d);
 
-p = rows(C);
+p = size(C,1);
 
 % Define augmented model for ALS
 Gbar = [0 0 0 1]';
 Cbar = [C 0];
 x0bar = [x0; 0]; % augmented by integrating disturbance
 nbar = length(x0bar);
-g = columns(Gbar);
+g = size(Gbar,2);
 
 % Initialize ALS estimates
 Q1_calc = 0;
