@@ -38,27 +38,26 @@
 % Created: August 1993
 % Updated by John Ingram (ingraje@eng.auburn.edu) July 1996.
 
-function [retval, U] = is_detectable (a, c, tol)
+function [retval, U] = is_detectable(a, c, tol)
 
-  if( nargin < 1)
+if (nargin < 1)
     usage("[retval,U] = is_detectable(a , c {, tol})");
-  elseif(isstruct(a))
+elseif (isstruct(a))
     % system form
-    if(nargin == 2)
-      tol = c;
-    elseif(nargin > 2)
-      usage("[retval,U] = is_detectable(sys {, tol})");
-    endif
-    [a,b,c] = sys2ss(a);
-  elseif(nargin > 3)
+    if (nargin == 2)
+        tol = c;
+    elseif (nargin > 2)
+        usage("[retval,U] = is_detectable(sys {, tol})");
+    end
+    [a, b, c] = sys2ss(a);
+elseif (nargin > 3)
     usage("[retval,U] = is_detectable(a , c {, tol})");
-  endif
-  if(exist("tol"))
-    [retval,U] = is_stabilizable (a', c', tol);
-  else
-    [retval,U] = is_stabilizable (a', c');
-  endif
+end
+if (exist("tol"))
+    [retval, U] = is_stabilizable(a', c', tol);
+else
+    [retval, U] = is_stabilizable(a', c');
+end
 
 
-endfunction
-
+end

@@ -35,39 +35,39 @@
 % Author: A. S. Hodel <a.s.hodel@eng.auburn.edu>
 % Created: July 1996
 
-function DIGITAL = is_digital (sys, eflg)
+function DIGITAL = is_digital(sys, eflg)
 
-  switch(nargin)
-  case(1),  eflg = 0;
-  case(2),
-    if( isempty(find(eflg == [0, 1, 2])) )
-      error("invalid value of eflg=%d (%e)",eflg,eflg);
-    endif
-  otherwise,
-    usage("DIGITAL = is_digital(sys{,eflg})");
-  endswitch
+switch (nargin)
+    case (1), eflg = 0;
+    case (2)
+        if (isempty(find(eflg == [0, 1, 2], 1)))
+            error("invalid value of eflg=%d (%e)", eflg, eflg);
+        end
+    otherwise
+        usage("DIGITAL = is_digital(sys{,eflg})");
+end
 
-  % checked for sampled data system (mixed)
-  % discrete system
-  sysyd = sysgetsignals(sys,"yd");
-  [nn,nz] = sysdimensions(sys);
-  cont = sum(sysyd == 0) + nn;
-  tsam = sysgettsam(sys);
-  dig = sum(sysyd != 0) + nz + tsam;
+% checked for sampled data system (mixed)
+% discrete system
+sysyd = sysgetsignals(sys, "yd");
+[nn, nz] = sysdimensions(sys);
+cont = sum(sysyd == 0) + nn;
+tsam = sysgettsam(sys);
+dig = sum(sysyd ~= 0) + nz + tsam;
 
-  % check for mixed system
-  if( cont*dig != 0)
-   switch(eflg)
-   case(0),
-     error("continuous/discrete system; use syscont, sysdisc, or c2d first");
-   case(1),
-     warning("is_digital: mixed continuous/discrete system");
-   endswitch
-   dig_sign = -1;
-  else
-   dig_sign = 1;
-  endif
+% check for mixed system
+if (cont * dig ~= 0)
+    switch (eflg)
+        case (0)
+            error("continuous/discrete system; use syscont, sysdisc, or c2d first");
+        case (1)
+            warning("is_digital: mixed continuous/discrete system");
+    end
+    dig_sign = -1;
+else
+    dig_sign = 1;
+end
 
-  DIGITAL = dig_sign*(tsam > 0);
+DIGITAL = dig_sign * (tsam > 0);
 
-endfunction
+end

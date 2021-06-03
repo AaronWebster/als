@@ -45,32 +45,40 @@
 % Updated by John Ingram (ingraje@eng.auburn.edu) July, 1996 for systems
 % Updated to simpler form by a.s.hodel 1998
 
-function retval = is_stable (a, tol, disc)
+function retval = is_stable(a, tol, disc)
 
-  if( (nargin < 1) | (nargin > 3) )   usage("is_stable(a {,tol,disc})");
-  elseif(isstruct(a))
+if (nargin < 1) || (nargin > 3)
+    usage("is_stable(a {,tol,disc})");
+elseif (isstruct(a))
     % system was passed
-    if(nargin < 3)                      disc = is_digital(a);
-    elseif(disc != is_digital(a))
-      warning("is_stable: disc =%d does not match system",disc)
-    endif
-    sys = sysupdate(a,"ss");
+    if nargin < 3
+        disc = is_digital(a);
+    elseif disc ~= is_digital(a)
+        warning("is_stable: disc =%d does not match system", disc)
+    end
+    sys = sysupdate(a, "ss");
     a = sys2ss(sys);
-  else
-    if(nargin < 3)              disc = 0;               endif
-    if(issquare(a) == 0)
-      error("A(%dx%d) must be square",rows(A), columns(A));
-    endif
-  endif
+else
+    if (nargin < 3)
+        disc = 0;
+    end
+    if (issquare(a) == 0)
+        error("A(%dx%d) must be square", rows(A), columns(A));
+    end
+end
 
-  if(nargin < 2)                tol = 200*eps;
-  elseif( !isscalar(tol) )
-    error("is_stable: tol(%dx%d) must be a scalar",rows(tol),columns(tol));
-  endif
+if (nargin < 2)
+    tol = 200 * eps;
+elseif length(tol) ~= 1
+    error("is_stable: tol(%dx%d) must be a scalar", rows(tol), columns(tol));
+end
 
-  l = eig(a);
-  if(disc)      nbad = sum(abs(l)*(1+tol) > 1);
-  else          nbad = sum(real(l)+tol > 0);            endif
-  retval = (nbad == 0);
+l = eig(a);
+if disc
+    nbad = sum(abs(l)*(1 + tol) > 1);
+else
+    nbad = sum(real(l)+tol > 0);
+end
+retval = (nbad == 0);
 
-endfunction
+end

@@ -61,54 +61,56 @@
 % Updated by A. S. Hodel (scotte@eng.auburn.edu) Aubust, 1995 to use krylovb
 % Updated by John Ingram (ingraje@eng.auburn.edu) July, 1996 for packed systems
 
-function [retval, U] = is_controllable (a, b, tol)
+function [retval, U] = is_controllable(a, b, tol)
 
-  deftol = 1;    % assume default tolerance
-  if(nargin < 1 | nargin > 3)
+deftol = 1; % assume default tolerance
+if (nargin < 1 | nargin > 3)
     usage("[retval,U] = %s\n\t%s", "is_controllable(a {, b, tol})", ...
         "is_controllable(sys{,tol})");
-  elseif(isstruct(a))
+elseif (isstruct(a))
     % system structure passed.
-    sys = sysupdate(a,"ss");
-    [a,bs] = sys2ss(sys);
-    if(nargin > 2)
-      usage("[retval,U] = is_controllable(sys{,tol})");
-    elseif(nargin == 2)
-      tol = b;          % get tolerance
-      deftol = 0;
-    endif
+    sys = sysupdate(a, "ss");
+    [a, bs] = sys2ss(sys);
+    if (nargin > 2)
+        usage("[retval,U] = is_controllable(sys{,tol})");
+    elseif (nargin == 2)
+        tol = b; % get tolerance
+        deftol = 0;
+    end
     b = bs;
-  else
+else
     % a,b arguments sent directly.
-    if(nargin < 2)
-      usage("[retval,U] = is_controllable(a {, b ,tol})");
+    if (nargin < 2)
+        usage("[retval,U] = is_controllable(a {, b ,tol})");
     else
-      deftol = 1;
-    endif
-  endif
+        deftol = 1;
+    end
+end
 
-  % check for default tolerance
-  if(deftol) tol = 1000*eps; endif
+% check for default tolerance
+if (deftol)
+    tol = 1000 * eps;
+end
 
-  % check tol dimensions
-  if( !isscalar(tol) )
+% check tol dimensions
+if length(tol) ~= 1
     error("is_controllable: tol(%dx%d) must be a scalar", ...
-        rows(tol),columns(tol));
-  elseif( !is_sample(tol) )
-    error("is_controllable: tol=%e must be positive",tol);
-  endif
+        rows(tol), columns(tol));
+elseif ~is_sample(tol)
+    error("is_controllable: tol=%e must be positive", tol);
+end
 
-  % check dimensions compatibility
-  n = issquare (a);
-  [nr, nc] = size (b);
+% check dimensions compatibility
+n = issquare(a);
+[nr, nc] = size(b);
 
-  if (n == 0 | n != nr | nc == 0)
-    warning("is_controllable: a=(%dx%d), b(%dx%d)",rows(a),columns(a),nr,nc);
+if (n == 0 || n ~= nr || nc == 0)
+    warning("is_controllable: a=(%dx%d), b(%dx%d)", rows(a), columns(a), nr, nc);
     retval = 0;
-  else
+else
     % call block-krylov subspace routine to get an orthogonal basis
     % of the controllable subspace.
-    [U,H,Ucols] = krylov(a,b,n,tol,1);
+    [U, ~, Ucols] = krylov(a, b, n, tol, 1);
     retval = (Ucols == n);
-  endif
-endfunction
+end
+end

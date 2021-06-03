@@ -45,45 +45,46 @@
 % Updated by A. S. Hodel (scotte@eng.auburn.edu) Aubust, 1995 to use krylovb
 % Updated by John Ingram (ingraje@eng.auburn.edu) July, 1996 to accept systems
 
-function [retval, U] = is_stabilizable (a, b, tol)
+function [retval, U] = is_stabilizable(a, b, tol)
 
-  if(nargin < 1)        usage("[retval,U] = is_stabilizable(a {, b ,tol})");
-  elseif(isstruct(a))
+if (nargin < 1)
+    usage("[retval,U] = is_stabilizable(a {, b ,tol})");
+elseif (isstruct(a))
     % sustem passed.
-    if(nargin == 2)
-      tol = b;          % get tolerance
-    elseif(nargin > 2)
-      usage("[retval,U] = is_stabilizable(sys{,tol})");
-    endif
-    [a,b] = sys2ss(a);
-  else
+    if (nargin == 2)
+        tol = b; % get tolerance
+    elseif (nargin > 2)
+        usage("[retval,U] = is_stabilizable(sys{,tol})");
+    end
+    [a, b] = sys2ss(a);
+else
     % a,b arguments sent directly.
-    if(nargin > 3)
-      usage("[retval,U] = is_stabilizable(a {, b ,tol})");
-    endif
-  endif
+    if (nargin > 3)
+        usage("[retval,U] = is_stabilizable(a {, b ,tol})");
+    end
+end
 
-  if(exist("tol"))
-    [retval,U] = is_controllable(a,b,tol);
-  else
-    [retval,U] = is_controllable(a,b);
-    tol = 1e2*rows(b)*eps;
-  endif
+if exist("tol")
+    [retval, U] = is_controllable(a, b, tol);
+else
+    [retval, U] = is_controllable(a, b);
+    tol = 1e2 * rows(b) * eps;
+end
 
-  if( !retval & columns(U) > 0)
+if ~retval && size(U, 2) > 0
     % now use an ordered Schur decomposition to get an orthogonal
     % basis of the unstable subspace...
     n = rows(a);
-    [ua, s] = schur (-(a+eye(n)*tol), "A");
-    k = sum( real(eig(a)) >= 0 );       % count unstable poles
+    [ua, ~] = schur(-(a + eye(n) * tol), "A");
+    k = sum(real(eig(a)) >= 0); % count unstable poles
 
-    if( k > 0 )
-      ua = ua(:,1:k);
-      % now see if span(ua) is contained in span(U)
-      retval = (norm(ua - U*U'*ua) < tol);
+    if (k > 0)
+        ua = ua(:, 1:k);
+        % now see if span(ua) is contained in span(U)
+        retval = (norm(ua - U * U' * ua) < tol);
     else
-      retval = 1;                       % all poles stable
-    endif
-  endif
+        retval = 1; % all poles stable
+    end
+end
 
-endfunction
+end
