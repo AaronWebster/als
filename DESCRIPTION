@@ -1,0 +1,12 @@
+Name: als
+Version: 5.0.0
+Date: 2014-05-12
+Author: Fernando V. Lima and Murali R. Rajamani
+Maintainer: Fernando V. Lima (flima@bevo.che.wisc.edu)
+Title: ALS Toolbox
+Description: test
+Autoload: yes
+Categories: system identification tools
+SystemRequirements: none
+
+
