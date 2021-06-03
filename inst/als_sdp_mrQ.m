@@ -68,14 +68,18 @@ function [Qest_cell, Rest_cell, trQ, Phi, Phi_tot, phi0, bhat_mtr, bhat_mtr_thry
 % Timespent - vector of time spent in seconds of CPU time for each
 % penalty on tr(Q)
 
-if (~isfield(data, 'datapts')) data.datapts = size(data.yk, 2); end
+if ~isfield(data, 'datapts')
+    data.datapts = size(data.yk, 2);
+end
 datapts = data.datapts;
 
 Aa = model.A;
 Ca = model.C;
 
-if (isfield(model, 'G')) Ga = model.G;
-else Ga = eye(size(Aa));
+if isfield(model, 'G')
+    Ga = model.G;
+else
+    Ga = eye(size(Aa));
 end
 [n, g] = size(Ga);
 p = size(Ca, 1);
@@ -303,8 +307,13 @@ if sdp == 0
     if lam_vec ~= 0
         warning('als_sdp_mrQ: Cannot solve indefinite problem with penalty on trQ');
     end
-    warning("off", "Octave:singular-matrix-div") %Octave
-    %warning('off','MATLAB:nearlySingularMatrix') %Matlab compatible
+    if ~isempty(ver('matlab'))
+        warning('off', 'MATLAB:nearlySingularMatrix')
+    elseif ~isempty(ver('octave'))
+        warning("off", "Octave:singular-matrix-div")
+    else
+        error('Could not determine interpreter version.');
+    end
     time1 = cputime;
     X = (LHSsingc' * Wm * LHSsingc) \ LHSsingc' * Wm * Eyy;
     timespent = cputime - time1;
@@ -371,20 +380,26 @@ cov_bound = cov_bound(:);
 
 if plot_flag == 1
     figure;
-    for i = 1:1:pa^2;
+    for i = 1:1:pa^2
         subplot(pa, pa, i);
-        plot(0:1:N-1, bhat_mtr(:, i), '-*', 'linewidth', 2, 0:1:N-1, bhat_mtr_thry(:, i), '-o', 'linewidth', 2); % Octave
-        % plot(0:1:N-1, bhat_mtr(:,i),'-*', 0:1:N-1, bhat_mtr_thry(:,i), '-o', 'linewidth', 2); % Matlab
-        % xlabel('Lag')
+        if ~isempty(ver('matlab'))
+            plot(0:1:N-1, bhat_mtr(:, i), '-*', 0:1:N-1, bhat_mtr_thry(:, i), '-o', 'linewidth', 2);
+        elseif ~isempty(ver('octave'))
+            plot(0:1:N-1, bhat_mtr(:, i), '-*', 'linewidth', 2, 0:1:N-1, bhat_mtr_thry(:, i), '-o', 'linewidth', 2); % Octave
+        else
+            error('Could not determine interpreter version.');
+        end
+
+        xlabel('Lag')
         hold on;
         plot([0; N], 2*kron([1, -1; 1, -1], [cov_bound(i)]), 'k');
-        if i == 1;
+        if i == 1
             legend('Data', 'Fit');
         end
-        if i <= pa;
+        if i <= pa
             title('Autocorrelation');
         end
-        if i > pa^2 - pa;
+        if i > pa^2 - pa
             xlabel('Lag');
         end
         hold off;

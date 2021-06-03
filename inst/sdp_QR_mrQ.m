@@ -3,7 +3,14 @@
 
 function [Q, phi2, phi, itertot, nsq, iter_maxed, phi_uw] = sdp_QR_mrQ(A, b, W, Q0, lam, nu, pa, Rsym, trstates)
 
-% warning("off","Octave:singular-matrix-div")
+if ~isempty(ver('matlab'))
+    warning('off', 'MATLAB:nearlySingularMatrix')
+elseif ~isempty(ver('octave'))
+    warning("off", "Octave:singular-matrix-div")
+else
+    error('Could not determine interpreter version.');
+end
+
 ntot = size(Q0, 1);
 
 na = ntot - pa;
