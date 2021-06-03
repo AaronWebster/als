@@ -119,7 +119,7 @@ okargs = {'rho_values', 'tracestates', 'rform', 'weight', 'plot', 'sdp'};
 for j = 1:2:(nargin - 4)
     pname = varargin{j};
     pval = varargin{j+1};
-    k = strcmpi(pname, okargs);
+    k = strmatch(lower(pname), okargs);
     if isempty(k)
         error('als_sdp_mrQ: Unknown parameter name: %s.', pname);
     elseif length(k) > 1
