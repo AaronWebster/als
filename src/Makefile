@@ -41,8 +41,8 @@ M_SRC := \
 	autocov_calc.m \
 	autocov_calc_thry.m \
 	comm_mat.m \
-	xdata_case1.dat \
-	ydata_case1.dat
+	xdata_case1.mat \
+	ydata_case1.mat
 
 CXX_SRC := 
 

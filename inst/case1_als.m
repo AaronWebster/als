@@ -29,8 +29,8 @@ endfunction
 #######################################
 # Load Data and Define Parameters #####
 #######################################
-load xdata_case1.dat 
-load ydata_case1.dat 
+load xdata_case1.mat 
+load ydata_case1.mat 
 
 ns = 4; % number of simulations
 tsim = 250; % duration of simulation
