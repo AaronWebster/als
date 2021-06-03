@@ -1,10 +1,10 @@
-%% Motivating Example (Section 2.2 of Murali Rajamani's Thesis)
+% Motivating Example (Section 2.2 of Murali Rajamani's Thesis)
 
 function [Qest_vectr, Rest_vectr] = motivating_example
 
 clear all
 
-randn('seed',100);
+rng(100);
 
 for(k=1:200)
 Aa = diag([0.1 0.2 0.3]); Aa(1,3)=0.1;
@@ -22,7 +22,7 @@ S = dlyap(Aa,Ga*Q_w*Ga');
 mult_Qw = vec_Qw*sqrt(eig_Qw);
 mult_Rv = vec_Rv*sqrt(eig_Rv);
 
-%%% initial guesses
+% initial guesses
 
 G_hat = [1;2;3];
 Qw_hat= .4*Q_w;
@@ -46,9 +46,9 @@ P = dlyap((Aa-Aa*L*Ca),[Ga -Aa*L]*[Q_w zeros(g,p);zeros(p,g) R_v]*[Ga -Aa*L]');
 xhat=zeros(na,datapts);
 xhat_=zeros(na,datapts);
 
-x(:,1) = 10*ones(na,1);  %% x0
+x(:,1) = 10*ones(na,1);  % x0
 
-xhat_(1:na,1) = x(:,1); %% assume initial state perfectly known
+xhat_(1:na,1) = x(:,1); % assume initial state perfectly known
 
 for i = 1:datapts
   
@@ -59,9 +59,7 @@ for i = 1:datapts
 
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% SETUP ALS PROBLEM %%%
-%%%%%%%%%%%%%%%%%%%%%%%%%
+% SETUP ALS PROBLEM 
 
 model.A = Aa;
 model.C = Ca;

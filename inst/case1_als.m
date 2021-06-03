@@ -4,9 +4,7 @@
 clear all
 close all
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-% Necessary Functions %%
-%%%%%%%%%%%%%%%%%%%%%%%%
+% Necessary Functions
 
 % Process model (CSTR example)
 function xdot = cstr_model(x,t)
@@ -16,9 +14,9 @@ function xdot = cstr_model(x,t)
   Q0 = 1;
   Vr = 100;
   xdot = [Qf/Vr*cf(1)-Q0/Vr*x(1)-(k(1)*x(1)-(k(2)+x(4))*x(2)*x(3)); ...
-	  Qf/Vr*cf(2)-Q0/Vr*x(2)+(k(1)*x(1)-(k(2)+x(4))*x(2)*x(3))-2*(k(3)*x(2)^2-k(4)*x(3)); ...
-	  Qf/Vr*cf(3)-Q0/Vr*x(3)+(k(1)*x(1)-(k(2)+x(4))*x(2)*x(3))+(k(3)*x(2)^2-k(4)*x(3)); ...
-	  0];
+    Qf/Vr*cf(2)-Q0/Vr*x(2)+(k(1)*x(1)-(k(2)+x(4))*x(2)*x(3))-2*(k(3)*x(2)^2-k(4)*x(3)); ...
+    Qf/Vr*cf(3)-Q0/Vr*x(3)+(k(1)*x(1)-(k(2)+x(4))*x(2)*x(3))+(k(3)*x(2)^2-k(4)*x(3)); ...
+    0];
 endfunction
 
 % Function used for sensitivity calculations
@@ -26,9 +24,7 @@ function xdot = cstr_sens(x,t,u)
   xdot = cstr_model(x,t);
 endfunction
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Load Data and Define Parameters %%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load Data and Define Parameters
 load xdata_case1.mat 
 load ydata_case1.mat 
 
@@ -61,9 +57,7 @@ R1pd_calc = 0;
 
 for(s = 1:ns)
   
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Start ALS Estimation %%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Start ALS Estimation
 
   data.delt = delta_d; % data sampling time
 
@@ -79,7 +73,7 @@ for(s = 1:ns)
   % Define ALS covariance guesses
   R_guess = 7.45e-2; % (1/2 variance of measurement noise)
   Q_guess = 2.30e-5; % (the other 1/2 of the variance of measurement
-		      % noise scaled by C*C')
+          % noise scaled by C*C')
 
   % ALS estimation parameters
   data.N = 15; % horizon length

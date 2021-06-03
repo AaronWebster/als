@@ -1,14 +1,12 @@
-%% Example of calculation of minimum rank Q using the TRADE-OFF CURVE method
+% Example of calculation of minimum rank Q using the TRADE-OFF CURVE method
 
 clear all
 
 close all
 
-randn("seed",200);
+rng(200);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% PLANT SIMULATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PLANT SIMULATION 
 
 Aa = [0.53565   0.23972;    0.75473   0.40629];
 
@@ -33,9 +31,9 @@ datapts = 5000;
 xhat=zeros(na,datapts);
 xhat_=zeros(na,datapts);
 
-x(:,1) = 10*ones(na,1);  %% x0
+x(:,1) = 10*ones(na,1);  % x0
 
-xhat_(1:na,1) = x(:,1); %% assume initial state perfectly known
+xhat_(1:na,1) = x(:,1); % assume initial state perfectly known
 
 for i = 1:datapts
   
@@ -63,7 +61,7 @@ rho = logspace(-6,6,25)';
 
 % Build Tradeoff plots using calculated data
 for i = 1:length(Qest);
-	rank_Q(i) = rank(Qest{i},1e-4);
+  rank_Q(i) = rank(Qest{i},1e-4);
 end
 figure(1)
 

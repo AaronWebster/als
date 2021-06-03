@@ -1,5 +1,5 @@
-%% Function to give the duplication matrix that will impose symmetry constraints on
-%% the covariance matrices, (Q)_s = tran*(Q)_ss
+% Function to give the duplication matrix that will impose symmetry constraints on
+% the covariance matrices, (Q)_s = tran*(Q)_ss
 function tran = symtran(n)
 
   r = n*(n+1)/2;

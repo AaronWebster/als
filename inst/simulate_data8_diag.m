@@ -1,8 +1,8 @@
-%% Diagonal ALS Implementation Example
+% Diagonal ALS Implementation Example
 
 clear all
 
-randn('seed',100);
+rng(100);
 Aa = diag([0.1 0.2 0.3]); Aa(1,3)=0.1;
 
 %Ga = [1;0.2;0.3];
@@ -23,7 +23,7 @@ S = dlyap(Aa,Ga*Q_w*Ga');
 mult_Qw = vec_Qw*sqrt(eig_Qw);
 mult_Rv = vec_Rv*sqrt(eig_Rv);
 
-%%% initial guesses
+% initial guesses
 
 G_hat = eye(3);
 Qw_hat = diag([1,2,3]);
@@ -48,9 +48,9 @@ P = dlyap((Aa-Aa*L*Ca),[Ga -Aa*L]*[Q_w zeros(g,p);zeros(p,g) R_v]*[Ga -Aa*L]');
 xhat=zeros(na,datapts);
 xhat_=zeros(na,datapts);
 
-x(:,1) = 10*ones(na,1);  %% x0
+x(:,1) = 10*ones(na,1);  % x0
 
-xhat_(1:na,1) = x(:,1); %% assume initial state perfectly known
+xhat_(1:na,1) = x(:,1); % assume initial state perfectly known
 
 for i = 1:datapts
   
@@ -61,9 +61,7 @@ for i = 1:datapts
 
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% SETUP ALS PROBLEM %%%
-%%%%%%%%%%%%%%%%%%%%%%%%%
+% SETUP ALS PROBLEM
 
 model.A = Aa;
 model.C = Ca;

@@ -1,19 +1,19 @@
 
-%% The Diagonal ALS function.  Uses Diagonal ALS form to estimate only
-%% the diagonal elements of Qw and Rv.
-%% Function Inputs : data.yk (measurements), data.uk (inputs),
-%% data.xhatk (state estimates- optional), data.datapts (number of data
-%% points considered), data.start (data to be ignored in the beginning 
-%% till initial condition is negligible),
-%% model.A, model.B (optional), model.C, model.G , N (window size),
-%% estimator.Q (Qw initial guess), estimator.R (Rv initial guess),
-%% estimator.L (initial estimator gain - optional).
-%% Function outputs : estimated Qw, estimated Rv, estimated filter gain
-%% L, and ALS LHS matrix As and RHS vector bhat.
-%% Please see file simulate_data8_diag.m for an example of the 
-%% Diagonal ALS implementation for a simple system.
-%% For Matlab implementation, the call of qp must be replaced by
-%% quadprog - see line 133 
+% The Diagonal ALS function.  Uses Diagonal ALS form to estimate only
+% the diagonal elements of Qw and Rv.
+% Function Inputs : data.yk (measurements), data.uk (inputs),
+% data.xhatk (state estimates- optional), data.datapts (number of data
+% points considered), data.start (data to be ignored in the beginning 
+% till initial condition is negligible),
+% model.A, model.B (optional), model.C, model.G , N (window size),
+% estimator.Q (Qw initial guess), estimator.R (Rv initial guess),
+% estimator.L (initial estimator gain - optional).
+% Function outputs : estimated Qw, estimated Rv, estimated filter gain
+% L, and ALS LHS matrix As and RHS vector bhat.
+% Please see file simulate_data8_diag.m for an example of the 
+% Diagonal ALS implementation for a simple system.
+% For Matlab implementation, the call of qp must be replaced by
+% quadprog - see line 133 
 
 
 function [Qest,Rest,Lest,As,bhat] = als_diag(data,N,model,estimator)
@@ -28,21 +28,31 @@ Ca = model.C;
 Ga = model.G;
 [n,g] = size(Ga);
 p = size(Ca,1);
-if( isfield(model, 'B')) Ba = model.B; m = size(Ba,2);
-else Ba = zeros(n);m = n; data.uk = zeros(m,datapts);
+if isfield(model, 'B')
+  Ba = model.B; 
+  m = size(Ba,2);
+else 
+  Ba = zeros(n);
+  m = n; 
+  data.uk = zeros(m,datapts);
 end
 start = data.start;
   
-na = n;ga = g;pa = p;
-%% Estimator Simulation
+na = n;
+ga = g;
+pa = p;
+
+% Estimator Simulation
 y = data.yk;
 u = data.uk;
 
-if( isfield(estimator,'L')) L = estimator.L;
-else L = dlqe(Aa,Ga,Ca,estimator.Q,estimator.R);
+if isfield(estimator,'L')
+  L = estimator.L;
+else 
+  L = dlqe(Aa,Ga,Ca,estimator.Q,estimator.R);
 end
 
-if(~isfield (data,'xhatk'))
+if ~isfield (data,'xhatk')
   xhat=zeros(na,datapts);
   xhat_ = zeros(n,datapts);
   xhat_(1:n,1) = model.xhat0;
@@ -58,7 +68,7 @@ end
 inntrun = y(:,start+1:end)-Ca*xhat_(:,start+1:end);
 datatrun = datapts-start;
 
-%% Calculation of Autocorrelations for one column ALS
+% Calculation of Autocorrelations for one column ALS
 Eyy=[];
 for i=0:N-1
   temp=inntrun(:,i+1:end)*inntrun(:,1:end-i)';
@@ -67,9 +77,7 @@ for i=0:N-1
 end
 Eyy= Eyy(:);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Building the constant matrix for the LS problem
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Building the constant matrix for the LS problem
   
 Ain = Aa-Aa*L*Ca;
 
@@ -80,7 +88,7 @@ for i = 1:N
   temp = temp*Ain;
 end
 
-%% temporary variables
+% temporary variables
 i=1;
 for j = 1:ga
   for k = 1:ga
@@ -102,9 +110,7 @@ for j = 1:pa
   end
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Diagonal ALS method
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Diagonal ALS method
   
 PSI = eye(pa);
 for  i= 1:N-1
@@ -131,7 +137,7 @@ end
 Xest_diag = qp(ones(ga+pa,1), As_diag'*As_diag, -As_diag'*Eyy, [], [], zeros(ga+pa,1), [], [], eye(pa+ga), []); 
 
 % For Matlab, call line 134 instead of 131:
-%Xest_diag = quadprog(As_diag'*As_diag, -As_diag'*Eyy, -eye(pa+ga), zeros(ga+pa,1));
+% Xest_diag = quadprog(As_diag'*As_diag, -As_diag'*Eyy, -eye(pa+ga), zeros(ga+pa,1));
 
 if prod(Xest_diag)==0 
   error('Covariance estimate(s) is (are) at constraints! You may have bad data! \n')

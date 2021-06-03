@@ -1,12 +1,12 @@
 function [nlin, A, B] = cvode_sens24(x, u, t0,t1)
 
-%% Call the cvode integrator and calculate states, x, and 
-%% sensitivities, sx, at the requested times.
+% Call the cvode integrator and calculate states, x, and 
+% sensitivities, sx, at the requested times.
 
 global model
 
 diff = cputime;
-  %% output size
+  % output size
   nx = size(x,1);
   nu = size(u,1);
   nt = 2;
@@ -23,15 +23,15 @@ diff = cputime;
   % CVODES initialization
   % ---------------------
 
-  %% Set options for integrator.
+  % Set options for integrator.
 
   options = CVodeSetOptions ('UserData', dataCV, ...
-			     'RelTol', model.rtol, ...
-			     'AbsTol', model.atol, ...
-			     'MaxNumSteps',model.odesteps);
-	
+           'RelTol', model.rtol, ...
+           'AbsTol', model.atol, ...
+           'MaxNumSteps',model.odesteps);
+  
 
-  %% Allocate storage and set initial conditions for integrator.
+  % Allocate storage and set initial conditions for integrator.
 
 %  if (~isfield(model,'cvodesfun'))
 %    disp('a')
@@ -41,7 +41,7 @@ diff = cputime;
 %    CVodeMalloc (model.cvodesfun, t0, x, options, dataCV);
 %  end
 
-  %% Set options for forward sensitivity problem.
+  % Set options for forward sensitivity problem.
 
   fsa_options = CVodeSensSetOptions('method','Simultaneous', ...
                                     'ErrControl', true,...
@@ -54,7 +54,7 @@ diff = cputime;
      CVodeSensInit (np, @sensrhs, sx0, fsa_options);
   end
 
-  %% Allocate storage for forward sensitivity problem.
+  % Allocate storage for forward sensitivity problem.
 %  CVodeSensMalloc (np, 'Simultaneous', sx0, fsa_options);
 
   [status, t, x_step, sx_step] = CVode (t1, 'Normal');
@@ -74,11 +74,10 @@ diff = cputime;
 
 end %cvode_sens
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [xsd, flag, new_data] = sensrhs(t, x, xdot, xs, dataCV)
-%% Right hand side of forward sensitivity equation
-%% sx = dx/dp
-%% dsx / dt = df/dx * sx + df/dp
+% Right hand side of forward sensitivity equation
+% sx = dx/dp
+% dsx / dt = df/dx * sx + df/dp
   global model 
   nx = length(x);
   p = dataCV.theta;
@@ -89,7 +88,6 @@ function [xsd, flag, new_data] = sensrhs(t, x, xdot, xs, dataCV)
   flag = 0;
   new_data = [];
 end 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [xdot,flag, new_data] = oderhs1(t,x,dataCV)
   global model;

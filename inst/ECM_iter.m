@@ -1,6 +1,6 @@
 
-%% Function to calculate the state error covariance matrix for the DLQE
-%% using iterations
+% Function to calculate the state error covariance matrix for the DLQE
+% using iterations
 
 function [L,P] = ECM_iter(A,G,C,Q,R)
 
