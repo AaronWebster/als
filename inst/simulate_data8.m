@@ -56,12 +56,10 @@ x(:, 1) = 10 * ones(na, 1); % x0
 xhat_(1:na, 1) = x(:, 1); % assume initial state perfectly known
 
 for i = 1:datapts
-    
     y(:, i) = Ca * x(:, i) + mult_Rv * randn(pa, 1);
     xhat(:, i) = xhat_(:, i) + L * (y(:, i) - Ca * xhat_(:, i));
     x(:, i+1) = Aa * x(:, i) + Ga * (mult_Qw * randn(ga, 1));
     xhat_(:, i+1) = Aa * xhat(:, i);
-    
 end
 
 % SETUP ALS PROBLEM
