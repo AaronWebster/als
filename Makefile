@@ -15,6 +15,10 @@ OCT_INSTDIR := $(DESTIDR)$(shell octave-config -p LOCALAPIOCTFILEDIR)/als
 
 M_INSTDIR := $(DESTDIR)$(shell octave-config -p LOCALAPIFCNFILEDIR)/als
 
+PKG_SRC := COPYING \
+	README \
+	DESCRIPTION
+
 M_SRC := \
 	als_diag.m \
 	golden_section_Q_mrQ.m \
@@ -37,8 +41,8 @@ M_SRC := \
 	autocov_calc.m \
 	autocov_calc_thry.m \
 	comm_mat.m \
-	xdata_case1.mat \
-	ydata_case1.mat
+	xdata_case1.dat \
+	ydata_case1.dat
 
 CXX_SRC := 
 
@@ -55,29 +59,18 @@ all:
 .PHONY: all
 
 dist:
-	$(eval TMP := $(shell mktemp -d))
-	@mkdir $(TMP)/als
-	@mkdir $(TMP)/als/src
-	@mkdir $(TMP)/als/inst
-	echo "Name: als" > $(TMP)/als/DESCRIPTION
-	echo "Version: 5.0.0" >> $(TMP)/als/DESCRIPTION
-	echo "Date: 2014-05-12" >> $(TMP)/als/DESCRIPTION
-	echo "Author: Fernando V. Lima and Murali R. Rajamani" >> $(TMP)/als/DESCRIPTION
-	echo "Maintainer: Fernando V. Lima (flima@bevo.che.wisc.edu)" >> $(TMP)/als/DESCRIPTION
-	echo "Title: ALS Toolbox" >> $(TMP)/als/DESCRIPTION
-	echo "Description: test" >> $(TMP)/als/DESCRIPTION
-	echo "Autoload: yes" >> $(TMP)/als/DESCRIPTION
-	echo "Categories: system identification tools" >> $(TMP)/als/DESCRIPTION
-	echo "SystemRequirements: none" >> $(TMP)/als/DESCRIPTION
-	cp $(M_SRC) $(TMP)/als/inst/
-	cp Makefile $(TMP)/als/src/
-	cp README.md $(TMP)/als/README
-	cp LICENSE $(TMP)/als/COPYING
-	cd $(TMP) && tar -czvf als.tar.gz als/
-	mv $(TMP)/als.tar.gz .
-	rm -rf $(TMP)
+	if test -d als; then echo; else mkdir als; fi
+	if test -d als/src; then echo; else mkdir als/src; fi
+	if test -d als/inst; then echo; else mkdir als/inst; fi
+	cp $(M_SRC) als/inst/
+	cp Makefile als/src/
+	cp $(PKG_SRC) als/
+	tar -czvf als.tar.gz als/
+	rm -rf als
 .PHONY: dist
 
 clean:
 	rm -f als.tar.gz
+	rm -f *.*~
+	rm -f *~
 .PHONY: clean
